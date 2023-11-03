@@ -1,0 +1,64 @@
+GET http://localhost:8080/get_bikes
+
+### Запрос 0
+GET http://localhost:8080/get_cities
+
+### Запрос 1
+POST http://localhost:8080/send_application
+Content-Type: application/json
+
+{
+    "name": "ASDFASDF",
+    "phone": "777777777",
+    "email": "ASDFASDF@gmail.com",
+    "city": 1,
+    "comment": "String",
+    "bikeId": 1,
+    "timestamp": 1698969727
+}
+
+### Запрос 2
+POST http://localhost:8080/admin/new_admin
+Content-Type: application/json
+
+{
+  "login": "admin",
+  "password": "admin",
+  "salt": "salt"
+}
+
+### Запрос 3
+POST http://localhost:8080/admin/login
+Content-Type: application/json
+
+{
+  "login": "admin",
+  "password": "admin",
+  "salt": "salt"
+}
+
+### Запрос 4
+GET http://localhost:8080/admin/applications
+Content-Type: application/json
+
+{
+  "length": 10,
+  "from": -2147483648,
+  "to": -2147483648
+}
+
+### Запрос
+
+### Запрос
+
+### Запрос
+
+### Запрос
+
+### Запрос
+
+### Запрос
+
+### Запрос
+
+### Запрос

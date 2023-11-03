@@ -1,0 +1,63 @@
+package com.example.data.data;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.regex.Pattern;
+
+@Getter
+@Setter
+@Entity
+@Table(name = "applications")
+public class Application {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "phone")
+    private String phone;
+
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "city_id")
+    private int city;
+
+    @Column(name = "comment")
+    private String comment;
+
+    @Column(name = "bike_id")
+    private int bikeId;
+
+    @Column(name = "time")
+    private long timestamp;
+
+    @Column(name = "viewed")
+    private boolean viewed;
+
+    public Application() {}
+
+    @Override
+    public String toString() {
+        return "Application{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", phone='" + phone + '\'' +
+                ", email='" + email + '\'' +
+                ", city=" + city +
+                ", comment='" + comment + '\'' +
+                ", bikeId=" + bikeId +
+                '}';
+    }
+
+
+    public boolean isGoodApplicationData() {
+        return Pattern.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$", email) &&
+                Pattern.matches("^[0-9]{9}$", phone) && name != null && comment != null;
+
+    }
+}

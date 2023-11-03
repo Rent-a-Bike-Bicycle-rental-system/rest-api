@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/Rent-a-bike
+    username: postgres
+    password: 915239
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+security:
+  jwt:
+    secret: ZnV0bmpoZXBicmJ0dmZubGppbmZ5dG55ZmlicmJjdmZueGZ2aW10aGphbmV2d3lhdm1qbGJrdGdlaGZweHJsamVyZmFsamRpZWJzc2hmZ3NvaGpheWRqZHdkZg==
+    access: 1
+    refresh: 30
