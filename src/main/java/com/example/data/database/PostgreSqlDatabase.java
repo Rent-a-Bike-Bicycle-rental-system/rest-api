@@ -1,18 +1,17 @@
 package com.example.data.database;
 
 import com.example.data.data.*;
-import com.example.data.repositories.AdminRepository;
-import com.example.data.repositories.ApplicationRepository;
-import com.example.data.repositories.BikeRepository;
-import com.example.data.repositories.CityRepository;
-import com.example.data.services.AdminService;
-import com.example.data.services.ApplicationService;
-import com.example.data.services.BikeService;
-import com.example.data.services.CityService;
+import com.example.data.repositories.*;
+import com.example.data.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class PostgreSqlDatabase implements DatabaseInterface {
@@ -28,9 +27,12 @@ public class PostgreSqlDatabase implements DatabaseInterface {
     private final AdminRepository adminRepository;
     private final AdminService adminService;
 
+    private final BikePhotoRepository bikePhotoRepository;
+    private final BikePhotoService bikePhotoService;
+
 
     @Autowired
-    public PostgreSqlDatabase(BikeRepository bikeRepository, BikeService bikeService, CityRepository cityRepository, CityService cityService, ApplicationRepository applicationRepository, ApplicationService applicationService, AdminRepository adminRepository, AdminService adminService) {
+    public PostgreSqlDatabase(BikeRepository bikeRepository, BikeService bikeService, CityRepository cityRepository, CityService cityService, ApplicationRepository applicationRepository, ApplicationService applicationService, AdminRepository adminRepository, AdminService adminService, BikePhotoRepository bikePhotoRepository, BikePhotoService bikePhotoService) {
         this.bikeRepository = bikeRepository;
         this.bikeService = bikeService;
 
@@ -42,6 +44,8 @@ public class PostgreSqlDatabase implements DatabaseInterface {
 
         this.adminRepository = adminRepository;
         this.adminService = adminService;
+        this.bikePhotoRepository = bikePhotoRepository;
+        this.bikePhotoService = bikePhotoService;
     }
 
     @Override
@@ -50,18 +54,65 @@ public class PostgreSqlDatabase implements DatabaseInterface {
     }
 
     @Override
+    @Transactional
     public boolean addNewBike(Bike bike) {
-        return bikeService.addNewBike(bike);
+        List<BikePhoto> photosList = new ArrayList<>(bike.getPhotos());
+        bike.setPhotos(null);
+
+        int bikeId = bikeService.addNewBike(bike);
+        if(bikeId == Integer.MIN_VALUE)
+            return false;
+
+        for(BikePhoto bikePhoto: photosList) {
+            bikePhoto.setBikeId(bikeId);
+            bikePhoto.setId(-1);
+            bikePhotoService.addChangeBikePhoto(bikePhoto);
+        }
+
+        return true;
     }
 
     @Override
+    @Transactional
     public boolean deleteBike(int id) {
-        return bikeRepository.deleteBikeById(id);
+        bikePhotoRepository.deleteAllByBikeId(id);
+        boolean isDeleted = bikeRepository.deleteBikeById(id);
+
+        if(isDeleted)
+            return true;
+        else
+            throw new RuntimeException("Not deleted");
     }
 
     @Override
+    @Transactional
     public boolean changeBikeInfo(Bike bike) {
-        return bikeService.updateBike(bike);
+        Bike previousBike = bikeService.updateBike(bike);
+        if(previousBike == null)
+            return false;
+
+        List<BikePhoto> previousBikePhotos = previousBike.getPhotos();
+        List<BikePhoto> presentBikePhotos = bike.getPhotos();
+
+        Map<Integer, BikePhoto> previousPhotosMap = previousBikePhotos.stream()
+                .collect(Collectors.toMap(BikePhoto::getId, Function.identity()));
+
+        for (BikePhoto currentPhoto : presentBikePhotos) {
+            if (previousPhotosMap.containsKey(currentPhoto.getId())) {
+                if (!previousPhotosMap.get(currentPhoto.getId()).getPhotoUrl().equals(currentPhoto.getPhotoUrl())) {
+                    bikePhotoService.addChangeBikePhoto(currentPhoto);
+                }
+                previousPhotosMap.remove(currentPhoto.getId());
+            } else {
+                bikePhotoService.addChangeBikePhoto(currentPhoto);
+            }
+        }
+
+        for (BikePhoto removedPhoto : previousPhotosMap.values()) {
+            bikePhotoRepository.deleteBikePhotoById(removedPhoto.getId());
+        }
+
+        return true;
     }
 
     @Override
@@ -107,7 +158,8 @@ public class PostgreSqlDatabase implements DatabaseInterface {
 
     @Override
     public boolean addNewApplication(Application application) {
-        return applicationService.addNewApplication(application);
+        applicationService.addNewApplication(application);
+        return true;
     }
 
     @Override

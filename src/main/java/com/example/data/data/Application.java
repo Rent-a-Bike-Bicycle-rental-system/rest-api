@@ -1,5 +1,6 @@
 package com.example.data.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -55,6 +56,7 @@ public class Application {
     }
 
 
+    @JsonIgnore
     public boolean isGoodApplicationData() {
         return Pattern.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$", email) &&
                 Pattern.matches("^[0-9]{9}$", phone) && name != null && comment != null;

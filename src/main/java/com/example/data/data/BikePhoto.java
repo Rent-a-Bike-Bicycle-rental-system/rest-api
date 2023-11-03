@@ -17,6 +17,9 @@ public class BikePhoto {
     @JoinColumn(name = "bike_id")
     private Bike bike;
 
+    @Column(name = "bike_id", insertable = false, updatable = false)
+    private int bikeId;
+
     @Column(name = "photo_url")
     private String photoUrl;
 

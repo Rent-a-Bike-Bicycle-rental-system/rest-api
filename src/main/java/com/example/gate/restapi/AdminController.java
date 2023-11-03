@@ -1,15 +1,12 @@
 package com.example.gate.restapi;
 
-import com.example.security.JwtTokenProvider;
 import com.example.data.data.*;
 import com.example.data.database.DatabaseInterface;
+import com.example.security.JwtTokenProvider;
 import jakarta.annotation.security.PermitAll;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -19,14 +16,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
-    private final AuthenticationManager authenticationManager;
     private final DatabaseInterface databaseInterface;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
-
-    public AdminController(AuthenticationManager authenticationManager, DatabaseInterface databaseInterface, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider) {
-        this.authenticationManager = authenticationManager;
+    @Autowired
+    public AdminController( DatabaseInterface databaseInterface, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider) {
         this.databaseInterface = databaseInterface;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenProvider = jwtTokenProvider;
@@ -35,15 +30,10 @@ public class AdminController {
     @PostMapping("/login")
     @PermitAll
     public ResponseEntity<String> loginAdmin(@RequestBody Admin admin) {
+        System.out.println(123123);
         try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(admin.getLogin(), admin.getPassword())
-            );
-
-            // Create JWT token
             String token = jwtTokenProvider.createRefreshToken(admin.getId(), admin.getLogin());
 
-            // Build response with JWT token
             return ResponseEntity.ok(token);
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication failed: " + e.getMessage());
@@ -51,14 +41,12 @@ public class AdminController {
     }
 
     @GetMapping("/applications")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Application>> getApplications(@RequestBody ApplicationReqest request) {
         List<Application> applications = databaseInterface.getApplications(request);
         return ResponseEntity.ok(applications);
     }
 
     @PostMapping("/bike")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> addNewBike(@RequestBody Bike bike) {
         if (bike.isBadBikeData())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad data");
@@ -70,7 +58,6 @@ public class AdminController {
     }
 
     @PatchMapping("/bike")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> changeBikeInfo(@RequestBody Bike bike) {
         if (bike.isBadBikeData())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad data");
@@ -82,7 +69,6 @@ public class AdminController {
     }
 
     @DeleteMapping("/bike")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteBike(@RequestBody Bike bike) {
         if (bike.isBadBikeData())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad data");
@@ -94,9 +80,8 @@ public class AdminController {
     }
 
     @PostMapping("/city")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> addNewCity(@RequestBody City city) {
-        if (!city.isGoodCityData())
+        if (city.isBadCityData())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad data");
 
         boolean isAdded = databaseInterface.addNewCity(city);
@@ -106,9 +91,8 @@ public class AdminController {
     }
 
     @DeleteMapping("/city")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteCity(@RequestBody City city) {
-        if (!city.isGoodCityData())
+        if (city.isBadCityData())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad data");
 
         boolean isDeleted = databaseInterface.deleteCity(city.getId());
@@ -118,7 +102,6 @@ public class AdminController {
     }
 
     @PostMapping("/new_admin")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> newAdmin(@RequestBody Admin admin) {
         if (admin.isBadAdminData())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad data");
@@ -128,7 +111,6 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Admin login already exists");
         }
 
-        // Шифруем пароль перед сохранением
         admin.setPassword(passwordEncoder.encode(admin.getPassword()));
 
         boolean isRegistered = databaseInterface.registerAdmin(admin);

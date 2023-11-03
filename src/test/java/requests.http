@@ -1,33 +1,24 @@
+### GET BIKES
 GET http://localhost:8080/get_bikes
 
-### Запрос 0
+### GET CITIES
 GET http://localhost:8080/get_cities
 
-### Запрос 1
+### POST APPLICAITON
 POST http://localhost:8080/send_application
 Content-Type: application/json
 
 {
-    "name": "ASDFASDF",
-    "phone": "777777777",
-    "email": "ASDFASDF@gmail.com",
+    "name": "hihi",
+    "phone": "666666666",
+    "email": "asdf@gmail.com",
     "city": 1,
-    "comment": "String",
+    "comment": "hj",
     "bikeId": 1,
     "timestamp": 1698969727
 }
 
-### Запрос 2
-POST http://localhost:8080/admin/new_admin
-Content-Type: application/json
-
-{
-  "login": "admin",
-  "password": "admin",
-  "salt": "salt"
-}
-
-### Запрос 3
+### LOGIN
 POST http://localhost:8080/admin/login
 Content-Type: application/json
 
@@ -37,9 +28,10 @@ Content-Type: application/json
   "salt": "salt"
 }
 
-### Запрос 4
+### GET APPLICATIONS
 GET http://localhost:8080/admin/applications
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlkIjowLCJleHAiOjE3MDE2MjE4OTN9.wtosieEFygrAoQt8yobrs86Qm9gJkPLsNE3UF0GacFDU39ogAwpZmJuwvv5BFQcsnMflX-DSvVbmdMhfnYfSpw
 
 {
   "length": 10,
@@ -47,18 +39,54 @@ Content-Type: application/json
   "to": -2147483648
 }
 
-### Запрос
+### POST BIKE
+POST http://localhost:8080/admin/bike
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlkIjowLCJleHAiOjE3MDE2MjE4OTN9.wtosieEFygrAoQt8yobrs86Qm9gJkPLsNE3UF0GacFDU39ogAwpZmJuwvv5BFQcsnMflX-DSvVbmdMhfnYfSpw
 
-### Запрос
+{
+  "nameEn": "Eng",
+  "namePl": "Pol",
+  "nameUa": "Ukr",
+  "nameRu": "Rus",
+  "commentEn": "ComEng",
+  "commentPl": "ComPol",
+  "commentUa": "ComUkr",
+  "commentRu": "ComRus",
+  "rental": 250,
+  "photos": [
+    {
+      "photoUrl": "www.example.com/11"
+    },
+    {
+      "photoUrl": "www.example.com/21"
+    }
+  ]
+}
 
-### Запрос
+### PATCH BIKE
+PATCH http://localhost:8080/admin/bike
 
-### Запрос
 
-### Запрос
+### DELETE BIKE
+DELETE http://localhost:8080/admin/bike
 
-### Запрос
 
-### Запрос
+### POST CITY
+POST http://localhost:8080/admin/city
 
-### Запрос
+
+### DELETE CITY
+DELETE http://localhost:8080/admin/city
+
+
+### POST NEW_ADMIN
+POST http://localhost:8080/admin/new_admin
+Content-Type: application/json
+Authorization: Bearer
+
+{
+  "login": "admin2",
+  "password": "admin2",
+  "salt": "salt"
+}

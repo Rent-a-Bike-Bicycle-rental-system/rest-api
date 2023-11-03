@@ -1,6 +1,7 @@
 package com.example.data.services;
 
 import com.example.data.data.Bike;
+import com.example.data.data.BikePhoto;
 import com.example.data.repositories.BikeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,27 +17,27 @@ public class BikeService {
         this.bikeRepository = bikeRepository;
     }
 
-    public boolean updateBike(Bike updatedBike) {
+    public Bike updateBike(Bike updatedBike) {
         Optional<Bike> existingBike = bikeRepository.findById(updatedBike.getId());
 
         if (existingBike.isPresent()) {
             bikeRepository.save(updatedBike);
 
-            return true;
+            return existingBike.get();
         } else {
-            return false;
+            return null;
         }
     }
 
-    public boolean addNewBike(Bike bike) {
+    public int addNewBike(Bike bike) {
         Optional<Bike> existingBike = bikeRepository.findById(bike.getId());
 
         if (existingBike.isEmpty()) {
-            bikeRepository.save(bike);
+            Bike savedBike = bikeRepository.save(bike);
 
-            return true;
+            return savedBike.getId();
         } else {
-            return false;
+            return Integer.MIN_VALUE;
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.data.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,6 +33,7 @@ public class Admin {
                 '}';
     }
 
+    @JsonIgnore
     public boolean isBadAdminData() {
         return login == null || password == null;
     }

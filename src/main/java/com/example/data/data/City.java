@@ -1,5 +1,6 @@
 package com.example.data.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,13 +20,15 @@ public class City {
     public City() {}
 
     @Override
+    @JsonIgnore
     public String toString() {
         return "City{" +
                 "city='" + city + '\'' +
                 '}';
     }
 
-    public boolean isGoodCityData() {
-        return city != null;
+    @JsonIgnore
+    public boolean isBadCityData() {
+        return city == null;
     }
 }

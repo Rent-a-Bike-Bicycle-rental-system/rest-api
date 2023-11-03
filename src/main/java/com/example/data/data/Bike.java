@@ -1,5 +1,6 @@
 package com.example.data.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -50,6 +51,7 @@ public class Bike {
         public Bike() {
         }
 
+        @JsonIgnore
         public boolean isBadBikeData() {
                 return nameEn == null || namePl == null || nameUa == null || nameRu == null ||
                         commentEn == null || commentPl == null || commentUa == null || commentRu == null;
