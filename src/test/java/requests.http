@@ -10,7 +10,7 @@ Content-Type: application/json
 
 {
     "name": "hihi",
-    "phone": "666666666",
+    "phone": "555555555",
     "email": "asdf@gmail.com",
     "city": 1,
     "comment": "hj",
@@ -31,7 +31,7 @@ Content-Type: application/json
 ### GET APPLICATIONS
 GET http://localhost:8080/admin/applications
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlkIjowLCJleHAiOjE3MDE2MjE4OTN9.wtosieEFygrAoQt8yobrs86Qm9gJkPLsNE3UF0GacFDU39ogAwpZmJuwvv5BFQcsnMflX-DSvVbmdMhfnYfSpw
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlkIjowLCJleHAiOjE3MDE3MDY0NDh9.3QOaV1grkDxrU8j6gVh5GKkCtz2Rq2XsvFiGdT07M1leEKTm2Jf1SWwKi6LNrYR_QAYJ-BAwfacn9vagAYKRxQ
 
 {
   "length": 10,
@@ -42,7 +42,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlkIjowLCJleHAiO
 ### POST BIKE
 POST http://localhost:8080/admin/bike
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlkIjowLCJleHAiOjE3MDE2MjE4OTN9.wtosieEFygrAoQt8yobrs86Qm9gJkPLsNE3UF0GacFDU39ogAwpZmJuwvv5BFQcsnMflX-DSvVbmdMhfnYfSpw
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlkIjowLCJleHAiOjE3MDE3MDY0NDh9.3QOaV1grkDxrU8j6gVh5GKkCtz2Rq2XsvFiGdT07M1leEKTm2Jf1SWwKi6LNrYR_QAYJ-BAwfacn9vagAYKRxQ
 
 {
   "nameEn": "Eng",

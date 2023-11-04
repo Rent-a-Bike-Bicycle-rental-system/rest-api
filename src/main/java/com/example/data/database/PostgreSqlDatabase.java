@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -57,7 +58,7 @@ public class PostgreSqlDatabase implements DatabaseInterface {
     @Transactional
     public boolean addNewBike(Bike bike) {
         List<BikePhoto> photosList = new ArrayList<>(bike.getPhotos());
-        bike.setPhotos(null);
+        bike.setPhotos(new ArrayList<>());
 
         int bikeId = bikeService.addNewBike(bike);
         if(bikeId == Integer.MIN_VALUE)
