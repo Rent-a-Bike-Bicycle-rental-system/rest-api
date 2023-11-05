@@ -1,6 +1,5 @@
-package com.example.security;
+package com.example.security.jwt;
 
-import com.example.security.properties.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;

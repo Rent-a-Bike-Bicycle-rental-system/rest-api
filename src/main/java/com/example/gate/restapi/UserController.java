@@ -4,9 +4,12 @@ import com.example.data.data.Application;
 import com.example.data.data.Bike;
 import com.example.data.data.City;
 import com.example.data.database.DatabaseInterface;
+import com.example.gate.rabbitmq.interfaces.RabbitMQSender;
 import jakarta.annotation.security.PermitAll;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,9 +20,12 @@ import java.util.List;
 @RestController
 public class UserController {
     private final DatabaseInterface database;
+    private final RabbitMQSender rabbitMQSender;
 
-    public UserController(@Qualifier("postgreSqlDatabase") DatabaseInterface database) {
+    @Autowired
+    public UserController(@Qualifier("postgreSqlDatabase") DatabaseInterface database, RabbitMQSender rabbitMQSender) {
         this.database = database;
+        this.rabbitMQSender = rabbitMQSender;
     }
 
     @GetMapping("/get_bikes")
@@ -40,18 +46,15 @@ public class UserController {
 
     @PostMapping("/send_application")
     @PermitAll
+    @Transactional
     public ResponseEntity<String> sendApplication(@RequestBody Application application) {
-        System.out.println(application);
         if(!application.isGoodApplicationData())
             return ResponseEntity.status(402).body("Bad data");
 
+        database.addNewApplication(application);
+        rabbitMQSender.sendApplicationToAdministratorsUsingTelegram(application);
+        rabbitMQSender.sendApplicationToEmail(application);
 
-
-        boolean savedApplication = database.addNewApplication(application);
-
-        if(savedApplication)
-            return ResponseEntity.ok("Application saved!");
-        else
-            return ResponseEntity.status(402).body("Bad parameter");
+        return ResponseEntity.ok("Application saved!");
     }
 }

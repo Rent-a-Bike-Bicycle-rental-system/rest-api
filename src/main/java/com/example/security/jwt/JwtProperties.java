@@ -1,4 +1,4 @@
-package com.example.security.properties;
+package com.example.security.jwt;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

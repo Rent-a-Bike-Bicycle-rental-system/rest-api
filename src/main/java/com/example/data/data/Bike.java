@@ -44,8 +44,8 @@ public class Bike {
         @Column(name = "rental")
         private int rental;
 
-        @JsonIgnoreProperties("bike")
-        @OneToMany(mappedBy = "bike", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+        @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+        @JoinColumn(name = "bike_id")
         private List<BikePhoto> photos;
 
         public Bike() {
@@ -54,6 +54,24 @@ public class Bike {
         @JsonIgnore
         public boolean isBadBikeData() {
                 return nameEn == null || namePl == null || nameUa == null || nameRu == null ||
-                        commentEn == null || commentPl == null || commentUa == null || commentRu == null;
+                        commentEn == null || commentPl == null || commentUa == null || commentRu == null || rental == 0 || photos == null;
+        }
+
+        @Override
+        @JsonIgnore
+        public String toString() {
+                return "Bike{" +
+                        "id=" + id +
+                        ", nameEn='" + nameEn + '\'' +
+                        ", namePl='" + namePl + '\'' +
+                        ", nameUa='" + nameUa + '\'' +
+                        ", nameRu='" + nameRu + '\'' +
+                        ", commentEn='" + commentEn + '\'' +
+                        ", commentPl='" + commentPl + '\'' +
+                        ", commentUa='" + commentUa + '\'' +
+                        ", commentRu='" + commentRu + '\'' +
+                        ", rental=" + rental +
+                        ", photos=" + photos +
+                        '}';
         }
 }

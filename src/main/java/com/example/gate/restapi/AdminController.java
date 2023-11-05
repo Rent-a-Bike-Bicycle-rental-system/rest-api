@@ -2,12 +2,15 @@ package com.example.gate.restapi;
 
 import com.example.data.data.*;
 import com.example.data.database.DatabaseInterface;
-import com.example.security.JwtTokenProvider;
+import com.example.exceptions.IncorrectPasswordException;
+import com.example.security.jwt.JwtTokenProvider;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,18 +22,32 @@ public class AdminController {
     private final DatabaseInterface databaseInterface;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final UserDetailsService userDetailsService;
 
     @Autowired
-    public AdminController( DatabaseInterface databaseInterface, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider) {
+    public AdminController(DatabaseInterface databaseInterface, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider, UserDetailsService userDetailsService) {
         this.databaseInterface = databaseInterface;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.userDetailsService = userDetailsService;
     }
 
     @PostMapping("/login")
     @PermitAll
     public ResponseEntity<String> loginAdmin(@RequestBody Admin admin) {
-        System.out.println(123123);
+        try {
+            var user = userDetailsService.loadUserByUsername(admin.getLogin());
+
+            if(!passwordEncoder.matches(admin.getPassword(), user.getPassword()))
+                throw new IncorrectPasswordException("Incorrect password");
+
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(401).body("User not found");
+        } catch (IncorrectPasswordException e) {
+            return ResponseEntity.status(401).body(e.getMessage());
+        }
+
+
         try {
             String token = jwtTokenProvider.createRefreshToken(admin.getId(), admin.getLogin());
 
@@ -41,8 +58,10 @@ public class AdminController {
     }
 
     @GetMapping("/applications")
-    public ResponseEntity<List<Application>> getApplications(@RequestBody ApplicationReqest request) {
+    public ResponseEntity<?> getApplications(@RequestBody ApplicationReqest request) {
         List<Application> applications = databaseInterface.getApplications(request);
+        if(applications == null)
+            return ResponseEntity.status(400).body("Bad request");
         return ResponseEntity.ok(applications);
     }
 
@@ -59,6 +78,7 @@ public class AdminController {
 
     @PatchMapping("/bike")
     public ResponseEntity<String> changeBikeInfo(@RequestBody Bike bike) {
+
         if (bike.isBadBikeData())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad data");
 
@@ -92,9 +112,6 @@ public class AdminController {
 
     @DeleteMapping("/city")
     public ResponseEntity<String> deleteCity(@RequestBody City city) {
-        if (city.isBadCityData())
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad data");
-
         boolean isDeleted = databaseInterface.deleteCity(city.getId());
         return isDeleted
                 ? ResponseEntity.ok("City deleted successfully")

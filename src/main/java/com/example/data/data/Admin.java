@@ -20,16 +20,13 @@ public class Admin {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "salt")
-    private String salt;
-
     @Override
+    @JsonIgnore
     public String toString() {
         return "Admin{" +
                 "id=" + id +
                 ", login='" + login + '\'' +
                 ", password='" + password + '\'' +
-                ", salt='" + salt + '\'' +
                 '}';
     }
 

@@ -6,6 +6,8 @@ import com.example.data.repositories.BikeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,13 +19,14 @@ public class BikeService {
         this.bikeRepository = bikeRepository;
     }
 
-    public Bike updateBike(Bike updatedBike) {
+    public List<BikePhoto> updateBike(Bike updatedBike) {
         Optional<Bike> existingBike = bikeRepository.findById(updatedBike.getId());
 
         if (existingBike.isPresent()) {
+            List<BikePhoto> bikePhotoList = new ArrayList<>(existingBike.get().getPhotos());
             bikeRepository.save(updatedBike);
 
-            return existingBike.get();
+            return bikePhotoList;
         } else {
             return null;
         }

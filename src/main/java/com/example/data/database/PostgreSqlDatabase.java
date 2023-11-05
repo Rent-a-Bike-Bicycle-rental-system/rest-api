@@ -8,11 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Service
 public class PostgreSqlDatabase implements DatabaseInterface {
@@ -76,42 +72,17 @@ public class PostgreSqlDatabase implements DatabaseInterface {
     @Override
     @Transactional
     public boolean deleteBike(int id) {
-        bikePhotoRepository.deleteAllByBikeId(id);
-        boolean isDeleted = bikeRepository.deleteBikeById(id);
+        bikePhotoRepository.deleteBikePhotosByBikeId(id);
+        bikeRepository.deleteBikeById(id);
 
-        if(isDeleted)
-            return true;
-        else
-            throw new RuntimeException("Not deleted");
+        return true;
     }
 
     @Override
     @Transactional
     public boolean changeBikeInfo(Bike bike) {
-        Bike previousBike = bikeService.updateBike(bike);
-        if(previousBike == null)
-            return false;
-
-        List<BikePhoto> previousBikePhotos = previousBike.getPhotos();
-        List<BikePhoto> presentBikePhotos = bike.getPhotos();
-
-        Map<Integer, BikePhoto> previousPhotosMap = previousBikePhotos.stream()
-                .collect(Collectors.toMap(BikePhoto::getId, Function.identity()));
-
-        for (BikePhoto currentPhoto : presentBikePhotos) {
-            if (previousPhotosMap.containsKey(currentPhoto.getId())) {
-                if (!previousPhotosMap.get(currentPhoto.getId()).getPhotoUrl().equals(currentPhoto.getPhotoUrl())) {
-                    bikePhotoService.addChangeBikePhoto(currentPhoto);
-                }
-                previousPhotosMap.remove(currentPhoto.getId());
-            } else {
-                bikePhotoService.addChangeBikePhoto(currentPhoto);
-            }
-        }
-
-        for (BikePhoto removedPhoto : previousPhotosMap.values()) {
-            bikePhotoRepository.deleteBikePhotoById(removedPhoto.getId());
-        }
+        bikePhotoRepository.deleteBikePhotosByBikeId(bike.getId());
+        bikeService.updateBike(bike);
 
         return true;
     }
@@ -128,7 +99,9 @@ public class PostgreSqlDatabase implements DatabaseInterface {
 
     @Override
     public boolean deleteCity(int id) {
-        return cityRepository.deleteById(id);
+        cityRepository.deleteById(id);
+
+        return true;
     }
 
     @Override
@@ -137,19 +110,19 @@ public class PostgreSqlDatabase implements DatabaseInterface {
         int from = request.from();
         int to = request.to();
 
-        if(from != Integer.MIN_VALUE && to != Integer.MIN_VALUE)
+        if(from != Integer.MIN_VALUE && to != 0)
             return applicationRepository.getApplicationsByIdBetween(from, to);
 
-        else if (length != Integer.MIN_VALUE && to != Integer.MIN_VALUE) {
+        else if (length != Integer.MIN_VALUE && to != 0) {
             from = Math.min((to - length), 1);
             return applicationRepository.getApplicationsByIdBetween(from, to);
         }
 
-        else if (length != Integer.MIN_VALUE && from != Integer.MIN_VALUE) {
+        else if (length != Integer.MIN_VALUE && from != 0) {
             return applicationRepository.getApplicationsByIdBetween(from, from + length);
         }
 
-        else if (length != Integer.MIN_VALUE) {
+        else if (length != 0) {
             int lastId = applicationRepository.getLastId();
             return applicationRepository.getApplicationsByIdBetween(lastId-length, lastId);
         }
@@ -158,9 +131,8 @@ public class PostgreSqlDatabase implements DatabaseInterface {
     }
 
     @Override
-    public boolean addNewApplication(Application application) {
+    public void addNewApplication(Application application) {
         applicationService.addNewApplication(application);
-        return true;
     }
 
     @Override

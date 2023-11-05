@@ -12,5 +12,5 @@ import java.util.List;
 public interface BikeRepository extends CrudRepository<Bike, Integer> {
     @Query("SELECT b FROM Bike b")
     List<Bike> getAllBikes();
-    boolean deleteBikeById(int id);
+    void deleteBikeById(int id);
 }

@@ -37,9 +37,6 @@ public class Application {
     @Column(name = "time")
     private long timestamp;
 
-    @Column(name = "viewed")
-    private boolean viewed;
-
     public Application() {}
 
     @Override

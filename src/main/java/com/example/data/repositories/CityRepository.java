@@ -10,5 +10,5 @@ public interface CityRepository extends CrudRepository<City, Integer> {
 
     @Query("SELECT c FROM City c")
     List<City> getAllCities();
-    boolean deleteById(int id);
+    void deleteById(int id);
 }

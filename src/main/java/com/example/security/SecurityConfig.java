@@ -1,5 +1,7 @@
 package com.example.security;
 
+import com.example.security.jwt.JwtTokenFilter;
+import com.example.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -65,6 +67,7 @@ public class SecurityConfig {
                         .requestMatchers("/get_cities").permitAll()
                         .requestMatchers("/send_application").permitAll()
                         .requestMatchers("/admin/login").permitAll()
+//                        .requestMatchers("/admin/new_admin").permitAll()
                         .anyRequest().authenticated()
 
                 )
