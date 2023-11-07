@@ -1,0 +1,153 @@
+### GET BIKES
+GET http://localhost:8080/get_bikes
+
+### GET CITIES
+GET http://localhost:8080/get_cities
+
+### POST APPLICAITON
+POST http://localhost:8080/send_application
+Content-Type: application/json
+
+{
+    "name": "TestTotal",
+    "phone": "333122333",
+    "email": "testTotal@gmail.com",
+    "city": 1,
+    "comment": "Total",
+    "bikeId": 1,
+    "timestamp": 1698969727
+}
+
+### LOGIN
+POST http://localhost:8080/admin/login
+Content-Type: application/json
+
+{
+  "login": "admin",
+  "password": "admin"
+}
+
+### GET APPLICATIONS
+GET http://localhost:8080/admin/applications
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlkIjowLCJleHAiOjE3MDE3MDY0NDh9.3QOaV1grkDxrU8j6gVh5GKkCtz2Rq2XsvFiGdT07M1leEKTm2Jf1SWwKi6LNrYR_QAYJ-BAwfacn9vagAYKRxQ
+
+{
+  "length": 10,
+  "from": 0,
+  "to": 0
+}
+
+### POST BIKE
+POST http://localhost:8080/admin/bike
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlkIjowLCJleHAiOjE3MDE3MDY0NDh9.3QOaV1grkDxrU8j6gVh5GKkCtz2Rq2XsvFiGdT07M1leEKTm2Jf1SWwKi6LNrYR_QAYJ-BAwfacn9vagAYKRxQ
+
+{
+  "nameEn": "asdf",
+  "namePl": "asffg",
+  "nameUa": "fjhk",
+  "nameRu": "fdhj",
+  "commentEn": "ComEng",
+  "commentPl": "ComPol",
+  "commentUa": "ComUkr",
+  "commentRu": "ComRus",
+  "rental": 250,
+  "photos": [
+    {
+      "photoUrl": "www.example.com/10001"
+    },
+    {
+      "photoUrl": "www.example.com/22041"
+    }
+  ]
+}
+
+### PATCH BIKE
+PATCH http://localhost:8080/admin/bike
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlkIjowLCJleHAiOjE3MDE3MDY0NDh9.3QOaV1grkDxrU8j6gVh5GKkCtz2Rq2XsvFiGdT07M1leEKTm2Jf1SWwKi6LNrYR_QAYJ-BAwfacn9vagAYKRxQ
+
+{
+  "id": 8,
+  "nameEn": "Eng",
+  "namePl": "Pol",
+  "nameUa": "Ukr",
+  "nameRu": "Rus",
+  "commentEn": "OK",
+  "commentPl": "ComPol",
+  "commentUa": "ComUkr",
+  "commentRu": "TUMBASDASD",
+  "rental": 250,
+  "photos": [
+    {
+      "id": 7,
+      "bikeId": 8,
+      "photoUrl": "www.example.com/111"
+    },
+    {
+      "id": 8,
+      "bikeId": 8,
+      "photoUrl": "www.example.com/212"
+    }
+  ]
+}
+
+### DELETE BIKE
+DELETE http://localhost:8080/admin/bike
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlkIjowLCJleHAiOjE3MDE3MDY0NDh9.3QOaV1grkDxrU8j6gVh5GKkCtz2Rq2XsvFiGdT07M1leEKTm2Jf1SWwKi6LNrYR_QAYJ-BAwfacn9vagAYKRxQ
+
+{
+  "id": 8,
+  "nameEn": "Eng",
+  "namePl": "Pol",
+  "nameUa": "Ukr",
+  "nameRu": "Rus",
+  "commentEn": "OK",
+  "commentPl": "ComPol",
+  "commentUa": "ComUkr",
+  "commentRu": "TUMBASDASD",
+  "rental": 250,
+  "photos": [
+    {
+      "id": 28,
+      "bikeId": 6,
+      "photoUrl": "www.example.com/111"
+    },
+    {
+      "id": 29,
+      "bikeId": 6,
+      "photoUrl": "www.example.com/212"
+    }
+  ]
+}
+
+### POST CITY
+POST http://localhost:8080/admin/city
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlkIjowLCJleHAiOjE3MDE3MDY0NDh9.3QOaV1grkDxrU8j6gVh5GKkCtz2Rq2XsvFiGdT07M1leEKTm2Jf1SWwKi6LNrYR_QAYJ-BAwfacn9vagAYKRxQ
+
+{
+  "city": "Gorzow"
+}
+
+### DELETE CITY
+DELETE http://localhost:8080/admin/city
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlkIjowLCJleHAiOjE3MDE3MDY0NDh9.3QOaV1grkDxrU8j6gVh5GKkCtz2Rq2XsvFiGdT07M1leEKTm2Jf1SWwKi6LNrYR_QAYJ-BAwfacn9vagAYKRxQ
+
+{
+  "id": 6,
+  "city": "s"
+}
+
+### POST NEW_ADMIN
+POST http://localhost:8080/admin/new_admin
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlkIjowLCJleHAiOjE3MDE3MDY0NDh9.3QOaV1grkDxrU8j6gVh5GKkCtz2Rq2XsvFiGdT07M1leEKTm2Jf1SWwKi6LNrYR_QAYJ-BAwfacn9vagAYKRxQ
+
+{
+  "login": "admin",
+  "password": "admin"
+}
