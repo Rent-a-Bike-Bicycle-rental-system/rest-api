@@ -16,7 +16,7 @@ public interface DatabaseInterface {
     boolean addNewCity(City city);
     boolean deleteCity(int id);
 
-    List<Application> getApplications(ApplicationReqest reqest);
+    List<Application> getApplications(ApplicationRequest reqest);
     void addNewApplication(Application application);
 
     Admin getAdminByLogin(String login);

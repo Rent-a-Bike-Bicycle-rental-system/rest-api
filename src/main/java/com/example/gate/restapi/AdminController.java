@@ -58,7 +58,7 @@ public class AdminController {
     }
 
     @GetMapping("/applications")
-    public ResponseEntity<?> getApplications(@RequestBody ApplicationReqest request) {
+    public ResponseEntity<?> getApplications(@RequestBody ApplicationRequest request) {
         List<Application> applications = databaseInterface.getApplications(request);
         if(applications == null)
             return ResponseEntity.status(400).body("Bad request");

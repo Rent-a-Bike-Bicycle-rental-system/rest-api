@@ -105,7 +105,7 @@ public class PostgreSqlDatabase implements DatabaseInterface {
     }
 
     @Override
-    public List<Application> getApplications(ApplicationReqest request) {
+    public List<Application> getApplications(ApplicationRequest request) {
         int length = request.length();
         int from = request.from();
         int to = request.to();

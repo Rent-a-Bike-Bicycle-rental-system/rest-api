@@ -1,8 +1,8 @@
 #!/bin/bash
 
-IMAGE_NAME="rest-api"
+IMAGE_NAME="bicyclerentalsystem-rest-api"
 TAG="dev"
-DOCKERHUB_NAME="bicyclerentalsystem"
+DOCKERHUB_NAME="baffepok"
 
 FULL_NAME="${DOCKERHUB_NAME}/${IMAGE_NAME}:${TAG}"
 
